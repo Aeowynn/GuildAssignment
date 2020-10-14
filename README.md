@@ -3,12 +3,17 @@ Chat API for Guild Education
 
 ## Database fields:
 Sender
+
 Recipient
+
 SentOn
+
 Message
+
 
 ## POST chat message endpoint
 **Endpoint**: /messages
+
 **Request body**:
   senderName: someString (required)
   recipientName: someString (required)
