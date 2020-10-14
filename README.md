@@ -1,13 +1,13 @@
 # GuildAssignment
 Chat API for Guild Education
 
-###### Database fields:
+## Database fields:
 Sender
 Recipient
 SentOn
 Message
 
-###### POST chat message endpoint
+## POST chat message endpoint
 **Endpoint**: /messages
 **Request body**:
   senderName: someString (required)
@@ -18,7 +18,7 @@ Message
 204 - message stored
 400 - missing required field
 
-###### GET chat messages for a recipient (100 most recent || all messages in last 30 days) ordered by newest to oldest
+## GET chat messages for a recipient (100 most recent || all messages in last 30 days) ordered by newest to oldest
 **Endpoint**: /messages
 **Request body**:
   recipientName: someString
@@ -36,7 +36,7 @@ Message
 200 - messages found
 404 - no messages found for the provided recipient
 
-###### GET chat messages for all senders (100 most recent || all messages in last 30 days) ordered by newest to oldest
+## GET chat messages for all senders (100 most recent || all messages in last 30 days) ordered by newest to oldest
 **Endpoint**:
 **Request body**: None
   
