@@ -113,6 +113,7 @@ Having a suite of functional tests with good coverage of my code is incredibly i
 I'd start storing the messages in a database, rather than the list they're currently being stored in. Here are the fields that would be in the database table:
 
 **Table**
+
 Sender VARCHAR(64)
 
 Recipient VARCHAR(64)
