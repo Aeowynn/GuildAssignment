@@ -1,45 +1,45 @@
 from app import app
 from flask import render_template, jsonify, request
+from .messages import Message
+
+# This would be replaced by a database setup with more time.
+messages = []
+
+# This was added as part of troubleshooting the pytests.
+@app.route('/')
+def heartbeat():
+	response = jsonify({"message": "heartbeat"})
+	response.status_code = 200
+	return response	
 
 @app.route('/messages', methods=['GET'])
 def get_all_messages():
-	pass#return jsonify(Message.query.get_or_404()).to_dict())
+	recipient = request.args.get('recipient')
 
-@app.route('/messages/<int:recipient>', methods=['GET'])
-def get_messages_by_recipient(recipient):
-	pass
+	if recipient != None:
+		response = jsonify(Message.filter_to_collection_dict(recipient, messages))
+		response.status_code = 200
+		return response
+
+	else:
+		response = jsonify(Message.to_collection_dict(messages))
+		response.status_code = 200
+		return response
 
 @app.route('/messages', methods=['POST'])
 def post_message():
 	request_data = request.get_json()
 	saved_message = Message()
+
+	# With more time, I would break this out by field in order to provide the user with exactly which field(s) were missing
+	if 'recipient' not in request_data or 'sender' not in request_data or 'message' not in request_data:
+		error_payload = {'message': 'Input must include recipient, sender and message fields'}
+		response = jsonify(error_payload)
+		response.status_code = 400
+		return response
+
 	Message.from_dict(saved_message, request_data)
-	return '''
-	Request data:
-	message is: {}
-	'''.format(Message.to_dict(saved_message))
-
-	
-
-class Message():
-	recipient = ""
-	sender = ""
-	message = ""
-	sentOn = 0
-
-	def to_dict(self):
-		data = {
-			'recipient': self.recipient,
-			'sender': self.sender,
-			'message': self.message,
-			'sentOn': self.sentOn
-		}
-		return data
-
-	def from_dict(self, data):
-		for field in ['recipient', 'sender', 'message']:
-			if field in data:
-				setattr(self, field, data[field])
-
-
-	# pagination
+	messages.append(saved_message)
+	response = jsonify(Message.to_dict(saved_message))
+	response.status_code = 200
+	return response
