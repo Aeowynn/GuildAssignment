@@ -21,7 +21,7 @@ I have provided my Postman tests for exercising these endpoints; I built out ser
   
 **Response body**:
 
-  response_code: 200
+  response_code: 201
 
   resonse_data:
 
@@ -37,7 +37,7 @@ I have provided my Postman tests for exercising these endpoints; I built out ser
   
 **Possible response codes**:
 
-204 - message stored
+201 - message stored
 
 400 - missing required field
 
@@ -109,6 +109,8 @@ I have provided my Postman tests for exercising these endpoints; I built out ser
 ## Troubleshoot the Service Tests
 Having a suite of functional tests with good coverage of my code is incredibly important to me; it helps me have confidence that any new code I check in has not broken existing functionality. And, if I fix a bug that was not caught by a test, I do my best to add in a test to cover that to prevent that bug from being re-introduced.
 
+I'd also like to expand on the validation some more. For example, ensuring that empty strings are not being passed in for message, sender and recipient.
+
 ## Implement a Database For Storing Messages
 I'd start storing the messages in a database, rather than the list they're currently being stored in. Here are the fields that would be in the database table:
 
@@ -118,7 +120,7 @@ Sender VARCHAR(64)
 
 Recipient VARCHAR(64)
 
-SentOn DATETIME
+Sent_On DATETIME
 
 Message VARCHAR(128)
 
