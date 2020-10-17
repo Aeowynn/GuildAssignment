@@ -8,6 +8,7 @@ from .__init__ import app
 from flask import json
 
 HTTP_OK = 200
+HTTP_CREATED = 201
 HTTP_BAD_REQUEST = 400
 
 message = 'Hello'
@@ -64,11 +65,11 @@ def assert_message_fields(response_data):
 
 
 # Post Endpoint Tests
-def test_post_message_returns_200():
-	post_message_and_assert_status(HTTP_OK, test_data)
+def test_post_message_returns_201():
+	post_message_and_assert_status(HTTP_CREATED, test_data)
 
 def test_post_message_returns_saved_message_fields():
-	response = post_message_and_assert_status(HTTP_OK, test_data)
+	response = post_message_and_assert_status(HTTP_CREATED, test_data)
 
 	assert_message_fields(response.data)
 
