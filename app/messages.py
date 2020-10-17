@@ -4,14 +4,14 @@ class Message:
 	recipient = ""
 	sender = ""
 	message = ""
-	sentOn = 0
+	sent_on = 0
 
 	def to_dict(self):
 		data = {
 			'recipient': self.recipient,
 			'sender': self.sender,
 			'message': self.message,
-			'sentOn': self.sentOn
+			'sent_on': self.sent_on
 		}
 		return data
 
@@ -20,7 +20,7 @@ class Message:
 			if field in data:
 				setattr(self, field, data[field])
 		# Setting the date automatically; the user shouldn't provide this field
-		setattr(self, 'sentOn', datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+		setattr(self, 'sent_on', datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
 
 	def to_collection_dict(messages):
 		data = {
