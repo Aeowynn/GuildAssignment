@@ -7,6 +7,9 @@ import pytest
 from .__init__ import app 
 from flask import json
 
+HTTP_OK = 200
+HTTP_BAD_REQUEST = 400
+
 message = 'Hello'
 recipient = 'To'
 sender = 'From'
@@ -38,14 +41,14 @@ def post_message_and_assert_status(input_code, data):
 	return response
 
 def get_messages_by_recipient_and_assert_status(input_code):
-	response = app.test_client().get('/messages')
+	response = app.test_client().get('/messages/?recipient=To')
 
 	assert response.status_code == input_code
 
 	return response
 
 def get_all_messages_and_assert_status(input_code):
-	response = app.test_client().get('/messages/?recipient=To')
+	response = app.test_client().get('/messages')
 
 	assert response.status_code == input_code
 
@@ -62,10 +65,10 @@ def assert_message_fields(response_data):
 
 # Post Endpoint Tests
 def test_post_message_returns_200():
-	post_message_and_assert_status(200, test_data)
+	post_message_and_assert_status(HTTP_OK, test_data)
 
 def test_post_message_returns_saved_message_fields():
-	response = post_message_and_assert_status(200, test_data)
+	response = post_message_and_assert_status(HTTP_OK, test_data)
 
 	assert_message_fields(response.data)
 
@@ -75,7 +78,7 @@ def test_post_message_returns_400_if_required_message_is_missing():
 		'sender': sender
 	})
 
-	post_message_and_assert_status(400, no_message)
+	post_message_and_assert_status(HTTP_BAD_REQUEST, no_message)
 
 def test_post_message_returns_400_if_required_sender_is_missing():
 	no_recipient = json.dumps({
@@ -83,7 +86,7 @@ def test_post_message_returns_400_if_required_sender_is_missing():
 		'sender': sender
 	})
 
-	post_message_and_assert_status(400, no_recipient)
+	post_message_and_assert_status(HTTP_BAD_REQUEST, no_recipient)
 
 def test_post_message_returns_400_if_required_recipient_is_missing():
 	no_sender = json.dumps({
@@ -91,25 +94,25 @@ def test_post_message_returns_400_if_required_recipient_is_missing():
 		'recipient': recipient,
 	})
 
-	post_message_and_assert_status(400, no_sender)
+	post_message_and_assert_status(HTTP_BAD_REQUEST, no_sender)
 
 
 # Get Messages by Recipient Endpoint tests
 def test_get_messages_by_recipient_returns_200():
-	post_message_and_assert_status(200, test_data)
+	post_message_and_assert_status(HTTP_OK, test_data)
 
-	get_messages_by_recipient_and_assert_status(200)
+	get_messages_by_recipient_and_assert_status(HTTP_OK)
 
 # Given more time, I would add a few more messages to this test and assert on those as well
 def test_get_messages_by_recipient_returns_expected_data_fields():
-	post_message_and_assert_status(200, test_data)
+	post_message_and_assert_status(HTTP_OK, test_data)
 
-	response = get_messages_by_recipient_and_assert_status(200)
+	response = get_messages_by_recipient_and_assert_status(HTTP_OK)
 
 	assert_message_fields(response.data[0])
 
 def test_get_messages_by_recipient_returns_empty_list_if_no_messages_exist():
-	response = get_messages_by_recipient_and_assert_status(200)
+	response = get_messages_by_recipient_and_assert_status(HTTP_OK)
 	assert len(response.data) == 0
 
 def test_get_messages_by_recipient_returns_empty_list_if_messages_exist_for_another_recipient():
@@ -119,23 +122,23 @@ def test_get_messages_by_recipient_returns_empty_list_if_messages_exist_for_anot
 		'sender': sender
 	})
 
-	post_message_and_assert_status(200, different_recipient)
+	post_message_and_assert_status(HTTP_OK, different_recipient)
 
-	response = get_messages_by_recipient_and_assert_status(200)
+	response = get_messages_by_recipient_and_assert_status(HTTP_OK)
 	assert len(response.data) == 0
 
 
 #Get All Messages endpoint tests
 def test_get_all_messages_returns_200():
-	get_all_messages_and_assert_status(200)
+	get_all_messages_and_assert_status(HTTP_OK)
 
 # Given more time, I would add a few more messages to this test and assert on those as well
 def test_get_all_messages_returns_expected_data_fields():
-	post_message_and_assert_status(200, test_data)
+	post_message_and_assert_status(HTTP_OK, test_data)
 
-	response = get_all_messages_and_assert_status(200)
+	response = get_all_messages_and_assert_status(HTTP_OK)
 	assert_message_fields(response.data)
 
 def test_get_all_messages_returns_empty_list_if_no_messages_exist():
-	response = get_all_messages_and_assert_status(200)
+	response = get_all_messages_and_assert_status(HTTP_OK)
 	assert len(response.data) == 0
